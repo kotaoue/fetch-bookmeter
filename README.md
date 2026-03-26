@@ -2,6 +2,8 @@
 
 [![Test](../../actions/workflows/test.yaml/badge.svg)](../../actions/workflows/test.yaml)
 
+Fetch from Bookmeter (読書メーター).
+
 A GitHub Action that fetches book data from [Bookmeter](https://bookmeter.com/) and saves it as JSON.
 
 ## Usage
