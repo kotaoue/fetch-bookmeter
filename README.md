@@ -19,7 +19,7 @@ A GitHub Action that fetches book data from [Bookmeter](https://bookmeter.com/) 
 ### Inputs
 
 | Input | Description | Required | Default |
-|-------|-------------|----------|---------|
+| ----- | ----------- | -------- | ------- |
 | `user-id` | Bookmeter user ID | No | `104` |
 | `output` | Output file path for the wish list JSON | No | `wish.json` |
 
