@@ -1,50 +1,70 @@
-# template
+# fetch-bookmeter
 
 [![Test](../../actions/workflows/test.yaml/badge.svg)](../../actions/workflows/test.yaml)
 
-This is both the origin and the emptiness.
+A GitHub Action that fetches book data from [Bookmeter](https://bookmeter.com/) and saves it as JSON.
 
----
+## Usage
 
-## GitHub Initial Setup
+### Fetch wish list
 
-```markdown
-## To be configured by the user
+```yaml
+- name: Fetch Bookmeter wish list
+  uses: kotaoue/fetch-bookmeter@v1
+  with:
+    user-id: '104'
+    output: 'wish.json'
+```
 
-- [ ] Set up Branch Protection Rules at [Settings/rules](../../settings/rules)
-- [ ] Enable "Automatically delete head branches" at [Settings](../../settings)
-- [ ] Review security settings at [Security](../../security)
+### Inputs
 
-## Request to Copilot
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `user-id` | Bookmeter user ID | No | `104` |
+| `output` | Output file path for the wish list JSON | No | `wish.json` |
 
-Please handle the following tasks.
+### Full workflow example
 
-1. Set up Dependabot version updates
-    Add `.github/dependabot.yml`
+```yaml
+name: Update README
 
-    Use the following as a base, and add entries for any languages used in this repository:
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch:
 
-    ```yaml
-    # .github/dependabot.yml
-    version: 2
-    updates:
-      # Automatically update GitHub Actions
-      - package-ecosystem: github-actions
-        directory: /
-        schedule:
-          interval: weekly
-    ```
+permissions:
+  contents: write
 
-1. Pin Action versions to commit SHAs
-    Replace `uses:` tag references with pinned commit SHAs in all workflows:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    ```yaml
-    # NG (tag reference)
-    - uses: actions/checkout@v4
+      - name: Fetch Bookmeter wish list
+        uses: kotaoue/fetch-bookmeter@v1
+        with:
+          user-id: '104'
+          output: ${{ github.workspace }}/wish.json
 
-    # OK (pinned to commit SHA)
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-    ```
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add wish.json
+          git diff --staged --quiet || git commit -m "chore: update wish list"
+          git push
+```
 
-1. Remove the "GitHub Initial Setup" section from README and clean it up
+## CLI Usage
+
+You can also run the tool directly using Go:
+
+```bash
+# Fetch wish list
+go run . fetch-wish -user-id 104 -output wish.json
+
+# Update README with a random book from wish list
+go run . update-readme -wish-file wish.json -readme README.md
 ```
