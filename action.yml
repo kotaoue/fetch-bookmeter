@@ -1,0 +1,27 @@
+name: 'Fetch Bookmeter'
+description: 'Fetch book data from Bookmeter and save it as JSON'
+author: 'kotaoue'
+
+branding:
+  icon: 'book-open'
+  color: 'blue'
+
+inputs:
+  user-id:
+    description: 'Bookmeter user ID'
+    required: true
+    default: '104'
+  output:
+    description: 'Output file path for the wish list JSON'
+    required: false
+    default: 'wish.json'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - fetch-wish
+    - '-user-id'
+    - ${{ inputs.user-id }}
+    - '-output'
+    - ${{ inputs.output }}
