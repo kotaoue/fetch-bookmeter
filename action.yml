@@ -12,16 +12,32 @@ inputs:
     required: true
     default: '104'
   output:
-    description: 'Output file path for the wish list JSON'
+    description: 'Output file path for the JSON'
     required: false
     default: 'wish.json'
+  type:
+    description: 'Type of book list to fetch: "wish" for wish list, "read" for read books history'
+    required: false
+    default: 'wish'
+  year:
+    description: 'Filter read books by year (e.g. 2024). 0 means no filter. Only used when type is "read".'
+    required: false
+    default: '0'
+  month:
+    description: 'Filter read books by month (1-12). 0 means no filter. Only used when type is "read".'
+    required: false
+    default: '0'
 
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - fetch-wish
+    - ${{ inputs.type == 'read' && 'fetch-read' || 'fetch-wish' }}
     - '-user-id'
     - ${{ inputs.user-id }}
     - '-output'
     - ${{ inputs.output }}
+    - '-year'
+    - ${{ inputs.year }}
+    - '-month'
+    - ${{ inputs.month }}

@@ -15,6 +15,8 @@ func RunFetchWish(args []string) error {
 	fs := flag.NewFlagSet("fetch-wish", flag.ExitOnError)
 	userID := fs.String("user-id", "104", "Bookmeter user ID")
 	output := fs.String("output", "wish.json", "Output file path for wish.json")
+	fs.Int("year", 0, "Not applicable to wish list (used only with fetch-read)")
+	fs.Int("month", 0, "Not applicable to wish list (used only with fetch-read)")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
