@@ -18,12 +18,24 @@ A GitHub Action that fetches book data from [Bookmeter](https://bookmeter.com/) 
     output: 'wish.json'
 ```
 
+### Fetch read books history
+
+```yaml
+- name: Fetch Bookmeter read books history
+  uses: kotaoue/fetch-bookmeter@v1
+  with:
+    user-id: '104'
+    type: 'read'
+    output: 'read.json'
+```
+
 ### Inputs
 
 | Input | Description | Required | Default |
 | ----- | ----------- | -------- | ------- |
 | `user-id` | Bookmeter user ID | No | `104` |
-| `output` | Output file path for the wish list JSON | No | `wish.json` |
+| `output` | Output file path for the JSON | No | `wish.json` |
+| `type` | Type of book list to fetch: `wish` for wish list, `read` for read books history | No | `wish` |
 
 ### Full workflow example
 
@@ -50,12 +62,19 @@ jobs:
           user-id: '104'
           output: ${{ github.workspace }}/wish.json
 
+      - name: Fetch Bookmeter read books history
+        uses: kotaoue/fetch-bookmeter@v1
+        with:
+          user-id: '104'
+          type: 'read'
+          output: ${{ github.workspace }}/read.json
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add wish.json
-          git diff --staged --quiet || git commit -m "chore: update wish list"
+          git add wish.json read.json
+          git diff --staged --quiet || git commit -m "chore: update book lists"
           git push
 ```
 
@@ -67,6 +86,6 @@ You can also run the tool directly using Go:
 # Fetch wish list
 go run . fetch-wish -user-id 104 -output wish.json
 
-# Update README with a random book from wish list
-go run . update-readme -wish-file wish.json -readme README.md
+# Fetch read books history
+go run . fetch-read -user-id 104 -output read.json
 ```

@@ -25,6 +25,25 @@ func TestWishListURL(t *testing.T) {
 	}
 }
 
+func TestReadListURL(t *testing.T) {
+	tests := []struct {
+		userID string
+		page   int
+		want   string
+	}{
+		{"104", 1, "https://bookmeter.com/users/104/books/read?page=1"},
+		{"104", 2, "https://bookmeter.com/users/104/books/read?page=2"},
+		{"999", 5, "https://bookmeter.com/users/999/books/read?page=5"},
+	}
+
+	for _, tt := range tests {
+		got := readListURL(tt.userID, tt.page)
+		if got != tt.want {
+			t.Errorf("readListURL(%q, %d) = %q, want %q", tt.userID, tt.page, got, tt.want)
+		}
+	}
+}
+
 func TestParseBooks(t *testing.T) {
 	html := `<li class="group__book"><div class="thumbnail__cover"><a href="/books/123"><img alt="Test Book" class="cover__image" /></a></div><ul class="detail__authors"><li><a href="/authors/456">Test Author</a></li></ul><div class="detail__date">2024-01-01</div></div></li>`
 
